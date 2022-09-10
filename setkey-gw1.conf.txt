@@ -1,0 +1,10 @@
+flush;
+spdflush;
+
+add 101.0.0.2 101.0.0.1 esp 0x101 -m tunnel -E aes-cbc 0x89abcdef89abcdef89abcdef89abcdef -A hmac-sha1 0xfedcba98fedcba98fedcba98fedcba98fedcba98;
+add 101.0.0.1 101.0.0.2 esp 0x201 -m tunnel -E aes-cbc 0x01234567012345670123456701234567 -A hmac-sha1 0x7654321076543210765432107654321076543210;
+
+spdadd 20.0.0.0/24 30.0.0.0/24 any -P in ipsec
+        esp/tunnel/101.0.0.2-101.0.0.1/require;
+spdadd 30.0.0.0/24 20.0.0.0/24 any -P out ipsec
+        esp/tunnel/101.0.0.1-101.0.0.2/require;
